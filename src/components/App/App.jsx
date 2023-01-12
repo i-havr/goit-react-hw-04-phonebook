@@ -7,19 +7,18 @@ import { ContactsList } from 'components/ContactsList/ContactsList';
 import { Filter } from 'components/Filter/Filter';
 
 export default function App() {
-  const isInitRef = useRef(true);
   const [contacts, setContacts] = useState(
     () => JSON.parse(window.localStorage.getItem('contacts')) ?? []
   );
   const [filter, setFilter] = useState('');
+  const isInitRef = useRef(true);
 
   useEffect(() => {
-    isInitRef.current = false;
-  }, []);
-
-  useEffect(() => {
-    !isInitRef.current &&
-      window.localStorage.setItem('contacts', JSON.stringify(contacts));
+    if (isInitRef.current) {
+      isInitRef.current = false;
+      return;
+    }
+    window.localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
   const addContact = ({ name, number }, resetForm) => {
